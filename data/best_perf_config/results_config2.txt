@@ -1,0 +1,158 @@
+#ifndef MYTYPES_H
+#define MYTYPES_H
+
+// tilescale (# of points computed by each thread)
+#ifndef TILESCALE_M
+#define TILESCALE_M 16
+#endif
+#ifndef TILESCALE_N
+#define TILESCALE_N 4
+#endif
+#ifndef TILESCALE_K
+#define TILESCALE_K 4
+#endif
+
+#define TILEDIM_M 128
+#define TILEDIM_N 128
+
+// matrix A loads
+// with warps along the horiziontal axis (K)
+// so to get good coalescaed loads, we want TILEDIM_K to be >= 32
+//
+#define TILEDIM_K 64 // Enter your own values
+
+// step size in each dimension
+// TN = DIM_N/bx, TM = DIM_M/by, AK = TK/BX, BK = TK/BY 
+#define TILESTEP_N 4
+#define TILESTEP_AK 2
+#define TILESTEP_BK 8
+#define TILESTEP_M 16
+#define PER_THREAD_WIDTH 2
+#ifndef BLOCKDIM_X
+// should be matching bx and by
+#define SHARED_BLOCK 16
+#else 
+#define SHARED_BLOCK BLOCKDIM_X
+#endif
+#endif
+=============================================
+
+ubuntu@ip-172-31-8-33:~/pa2-nwahi-ygala$ ./mmpy -r 2000 -n 256
+# devices: 1
+
+Device is a Tesla T4, capability: 7.5
+Clock speed: 1590.000000 MHz
+# cores: 40
+
+Global memory: 14.560913GB
+Memory Clock Rate (MHz): 5001.000000
+Memory Bus Width (bits): 256
+Peak Memory Bandwidth (GB/s): 320.064000
+L2 Cache size: (KB): 4096.000000
+ECC Enabled
+Device shares a unified address space with the host
+CUDA Driver version: 11060, runtime version: 10010
+
+ capability 7.5
+n: 256, tx: 32, ty: 8, gridX: 2, gridY: 2, reps: 2000, epsilon: 9.15527e-05
+
+Using Single precision arithmetic
+
+
+Device computation time: 0.130311 sec. [514.989968 gflops]
+
+     N     TX     TY   Reps       t_h     GF_h       t_d   GF_d   Host?  L1? Rnd?  BT?  SHM
+@   256    32      8    2000   0.00e+00     0.0  1.30e-01  515.0     N    N    N    N    4
+
+
+Device result: answers matched to within 9.15527e-05
+
+ubuntu@ip-172-31-8-33:~/pa2-nwahi-ygala$ ./mmpy -r 2000 -n 512
+# devices: 1
+
+Device is a Tesla T4, capability: 7.5
+Clock speed: 1590.000000 MHz
+# cores: 40
+
+Global memory: 14.560913GB
+Memory Clock Rate (MHz): 5001.000000
+Memory Bus Width (bits): 256
+Peak Memory Bandwidth (GB/s): 320.064000
+L2 Cache size: (KB): 4096.000000
+ECC Enabled
+Device shares a unified address space with the host
+CUDA Driver version: 11060, runtime version: 10010
+
+ capability 7.5
+n: 512, tx: 32, ty: 8, gridX: 4, gridY: 4, reps: 2000, epsilon: 0.000183105
+
+Using Single precision arithmetic
+
+
+Device computation time: 0.256752 sec. [2091.009544 gflops]
+
+     N     TX     TY   Reps       t_h     GF_h       t_d   GF_d   Host?  L1? Rnd?  BT?  SHM
+@   512    32      8    2000   0.00e+00     0.0  2.57e-01 2091.0     N    N    N    N    4
+
+
+Device result: answers matched to within 0.000183105
+
+ubuntu@ip-172-31-8-33:~/pa2-nwahi-ygala$ ./mmpy -r 2000 -n 1024
+# devices: 1
+
+Device is a Tesla T4, capability: 7.5
+Clock speed: 1590.000000 MHz
+# cores: 40
+
+Global memory: 14.560913GB
+Memory Clock Rate (MHz): 5001.000000
+Memory Bus Width (bits): 256
+Peak Memory Bandwidth (GB/s): 320.064000
+L2 Cache size: (KB): 4096.000000
+ECC Enabled
+Device shares a unified address space with the host
+CUDA Driver version: 11060, runtime version: 10010
+
+ capability 7.5
+n: 1024, tx: 32, ty: 8, gridX: 8, gridY: 8, reps: 2000, epsilon: 0.000366211
+
+Using Single precision arithmetic
+
+
+Device computation time: 1.304714 sec. [3291.884208 gflops]
+
+     N     TX     TY   Reps       t_h     GF_h       t_d   GF_d   Host?  L1? Rnd?  BT?  SHM
+@  1024    32      8    2000   0.00e+00     0.0  1.30e+00 3291.9     N    N    N    N    4
+
+
+Device result: answers matched to within 0.000366211
+
+ubuntu@ip-172-31-8-33:~/pa2-nwahi-ygala$ ./mmpy -r 2000 -n 2048
+# devices: 1
+
+Device is a Tesla T4, capability: 7.5
+Clock speed: 1590.000000 MHz
+# cores: 40
+
+Global memory: 14.560913GB
+Memory Clock Rate (MHz): 5001.000000
+Memory Bus Width (bits): 256
+Peak Memory Bandwidth (GB/s): 320.064000
+L2 Cache size: (KB): 4096.000000
+ECC Enabled
+Device shares a unified address space with the host
+CUDA Driver version: 11060, runtime version: 10010
+
+ capability 7.5
+n: 2048, tx: 32, ty: 8, gridX: 16, gridY: 16, reps: 2000, epsilon: 0.000732422
+
+Using Single precision arithmetic
+
+
+Device computation time: 9.605540 sec. [3577.075218 gflops]
+
+     N     TX     TY   Reps       t_h     GF_h       t_d   GF_d   Host?  L1? Rnd?  BT?  SHM
+@  2048    32      8    2000   0.00e+00     0.0  9.61e+00 3577.1     N    N    N    N    4
+
+
+Device result: answers matched to within 0.000732422

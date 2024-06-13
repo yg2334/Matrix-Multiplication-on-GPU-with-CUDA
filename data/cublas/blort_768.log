@@ -1,0 +1,1503 @@
+==PROF== Connected to process 5571 (/home/ubuntu/pa2-nwahi-ygala/mmpy)
+==PROF== Profiling "volta_sgemm_128x64_nn" - 1: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 2: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 3: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 4: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 5: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 6: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 7: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 8: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 9: 0%....50%....100% - 32 passes
+==PROF== Profiling "volta_sgemm_128x64_nn" - 10: 0%....50%....100% - 32 passes
+==PROF== Profiling "matMul" - 11: 0%....50%....100% - 32 passes
+==PROF== Disconnected from process 5571
+[5571] mmpy@127.0.0.1
+  volta_sgemm_128x64_nn, 2024-May-15 04:04:55, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         582.95
+    Elapsed Cycles                                                                   cycle                         217032
+    Memory [%]                                                                           %                          38.85
+    DRAM Throughput                                                                      %                           9.16
+    Duration                                                                       usecond                         372.29
+    L1/TEX Cache Throughput                                                              %                          70.13
+    L2 Cache Throughput                                                                  %                          15.29
+    SM Active Cycles                                                                 cycle                      193381.55
+    Compute (SM) [%]                                                                     %                          81.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.96
+    Issue Slots Busy                                                                     %                          54.88
+    Issued Ipc Active                                                           inst/cycle                           2.20
+    SM Busy                                                                              %                          91.92
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.19
+    Mem Busy                                                                             %                          35.06
+    Max Bandwidth                                                                        %                          38.85
+    L1/TEX Hit Rate                                                                      %                           0.80
+    L2 Hit Rate                                                                          %                          90.72
+    Mem Pipes Busy                                                                       %                          38.84
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.80
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.20
+    Active Warps Per Scheduler                                                        warp                           2.81
+    Eligible Warps Per Scheduler                                                      warp                           1.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.81 active warps per scheduler, but only an average of 1.28 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106097.40
+    Executed Instructions                                                             inst                       16975584
+    Avg. Issued Instructions Per Scheduler                                            inst                      106121.44
+    Issued Instructions                                                               inst                       16979430
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.22
+    Achieved Active Warps Per SM                                                      warp                          11.27
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.2%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61783
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:04:58, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.97
+    SM Frequency                                                             cycle/usecond                         582.31
+    Elapsed Cycles                                                                   cycle                         217074
+    Memory [%]                                                                           %                          38.84
+    DRAM Throughput                                                                      %                           9.20
+    Duration                                                                       usecond                         372.77
+    L1/TEX Cache Throughput                                                              %                          70.13
+    L2 Cache Throughput                                                                  %                          15.28
+    SM Active Cycles                                                                 cycle                      193380.10
+    Compute (SM) [%]                                                                     %                          81.89
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.96
+    Issue Slots Busy                                                                     %                          54.88
+    Issued Ipc Active                                                           inst/cycle                           2.20
+    SM Busy                                                                              %                          91.92
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.28
+    Mem Busy                                                                             %                          35.06
+    Max Bandwidth                                                                        %                          38.84
+    L1/TEX Hit Rate                                                                      %                           0.83
+    L2 Hit Rate                                                                          %                          90.75
+    Mem Pipes Busy                                                                       %                          38.84
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.77
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.23
+    Active Warps Per Scheduler                                                        warp                           2.82
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.82 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.15
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106098.56
+    Executed Instructions                                                             inst                       16975770
+    Avg. Issued Instructions Per Scheduler                                            inst                      106123.03
+    Issued Instructions                                                               inst                       16979685
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.28
+    Achieved Active Warps Per SM                                                      warp                          11.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.3%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61705
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:00, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         583.61
+    Elapsed Cycles                                                                   cycle                         217222
+    Memory [%]                                                                           %                          38.81
+    DRAM Throughput                                                                      %                           9.16
+    Duration                                                                       usecond                         372.19
+    L1/TEX Cache Throughput                                                              %                          70.09
+    L2 Cache Throughput                                                                  %                          15.27
+    SM Active Cycles                                                                 cycle                      193350.70
+    Compute (SM) [%]                                                                     %                          81.83
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.89
+    Issued Ipc Active                                                           inst/cycle                           2.20
+    SM Busy                                                                              %                          91.93
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.23
+    Mem Busy                                                                             %                          35.04
+    Max Bandwidth                                                                        %                          38.81
+    L1/TEX Hit Rate                                                                      %                           0.81
+    L2 Hit Rate                                                                          %                          90.62
+    Mem Pipes Busy                                                                       %                          38.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.80
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.20
+    Active Warps Per Scheduler                                                        warp                           2.82
+    Eligible Warps Per Scheduler                                                      warp                           1.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.82 active warps per scheduler, but only an average of 1.28 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106099.12
+    Executed Instructions                                                             inst                       16975860
+    Avg. Issued Instructions Per Scheduler                                            inst                      106125.37
+    Issued Instructions                                                               inst                       16980059
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.23
+    Achieved Active Warps Per SM                                                      warp                          11.27
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.2%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61705
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:03, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         582.93
+    Elapsed Cycles                                                                   cycle                         217060
+    Memory [%]                                                                           %                          38.84
+    DRAM Throughput                                                                      %                           9.20
+    Duration                                                                       usecond                         372.35
+    L1/TEX Cache Throughput                                                              %                          70.12
+    L2 Cache Throughput                                                                  %                          15.28
+    SM Active Cycles                                                                 cycle                      193397.67
+    Compute (SM) [%]                                                                     %                          81.89
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.96
+    Issue Slots Busy                                                                     %                          54.87
+    Issued Ipc Active                                                           inst/cycle                           2.19
+    SM Busy                                                                              %                          91.91
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.30
+    Mem Busy                                                                             %                          35.06
+    Max Bandwidth                                                                        %                          38.84
+    L1/TEX Hit Rate                                                                      %                           0.80
+    L2 Hit Rate                                                                          %                          90.71
+    Mem Pipes Busy                                                                       %                          38.84
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.78
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.22
+    Active Warps Per Scheduler                                                        warp                           2.81
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.81 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106096.73
+    Executed Instructions                                                             inst                       16975476
+    Avg. Issued Instructions Per Scheduler                                            inst                      106122.15
+    Issued Instructions                                                               inst                       16979544
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.26
+    Achieved Active Warps Per SM                                                      warp                          11.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.3%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61743
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:05, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         583.37
+    Elapsed Cycles                                                                   cycle                         217263
+    Memory [%]                                                                           %                          38.80
+    DRAM Throughput                                                                      %                           9.17
+    Duration                                                                       usecond                         372.42
+    L1/TEX Cache Throughput                                                              %                          70.06
+    L2 Cache Throughput                                                                  %                          15.27
+    SM Active Cycles                                                                 cycle                      193368.23
+    Compute (SM) [%]                                                                     %                          81.82
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.88
+    Issued Ipc Active                                                           inst/cycle                           2.20
+    SM Busy                                                                              %                          91.92
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.24
+    Mem Busy                                                                             %                          35.03
+    Max Bandwidth                                                                        %                          38.80
+    L1/TEX Hit Rate                                                                      %                           0.82
+    L2 Hit Rate                                                                          %                          90.68
+    Mem Pipes Busy                                                                       %                          38.80
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.80
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.20
+    Active Warps Per Scheduler                                                        warp                           2.82
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.82 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106097.02
+    Executed Instructions                                                             inst                       16975524
+    Avg. Issued Instructions Per Scheduler                                            inst                      106122.73
+    Issued Instructions                                                               inst                       16979637
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.25
+    Achieved Active Warps Per SM                                                      warp                          11.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.3%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61778
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:08, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         582.85
+    Elapsed Cycles                                                                   cycle                         217330
+    Memory [%]                                                                           %                          38.79
+    DRAM Throughput                                                                      %                           9.17
+    Duration                                                                       usecond                         372.86
+    L1/TEX Cache Throughput                                                              %                          70.02
+    L2 Cache Throughput                                                                  %                          15.26
+    SM Active Cycles                                                                 cycle                      193347.35
+    Compute (SM) [%]                                                                     %                          81.79
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.89
+    Issued Ipc Active                                                           inst/cycle                           2.20
+    SM Busy                                                                              %                          91.93
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.20
+    Mem Busy                                                                             %                          35.01
+    Max Bandwidth                                                                        %                          38.79
+    L1/TEX Hit Rate                                                                      %                           0.81
+    L2 Hit Rate                                                                          %                          90.76
+    Mem Pipes Busy                                                                       %                          38.79
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.80
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.20
+    Active Warps Per Scheduler                                                        warp                           2.82
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.82 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106097.87
+    Executed Instructions                                                             inst                       16975659
+    Avg. Issued Instructions Per Scheduler                                            inst                      106123.71
+    Issued Instructions                                                               inst                       16979793
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.25
+    Achieved Active Warps Per SM                                                      warp                          11.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.3%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61715
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:11, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.99
+    SM Frequency                                                             cycle/usecond                         584.19
+    Elapsed Cycles                                                                   cycle                         217398
+    Memory [%]                                                                           %                          38.78
+    DRAM Throughput                                                                      %                           9.11
+    Duration                                                                       usecond                         372.13
+    L1/TEX Cache Throughput                                                              %                          70.01
+    L2 Cache Throughput                                                                  %                          15.26
+    SM Active Cycles                                                                 cycle                      193428.90
+    Compute (SM) [%]                                                                     %                          81.77
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.86
+    Issued Ipc Active                                                           inst/cycle                           2.19
+    SM Busy                                                                              %                          91.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.09
+    Mem Busy                                                                             %                          35.01
+    Max Bandwidth                                                                        %                          38.78
+    L1/TEX Hit Rate                                                                      %                           0.80
+    L2 Hit Rate                                                                          %                          90.67
+    Mem Pipes Busy                                                                       %                          38.78
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.81
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.19
+    Active Warps Per Scheduler                                                        warp                           2.81
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.81 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106097.57
+    Executed Instructions                                                             inst                       16975611
+    Avg. Issued Instructions Per Scheduler                                            inst                      106122.64
+    Issued Instructions                                                               inst                       16979622
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.25
+    Achieved Active Warps Per SM                                                      warp                          11.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.2%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61763
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:13, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         583.60
+    Elapsed Cycles                                                                   cycle                         217405
+    Memory [%]                                                                           %                          38.78
+    DRAM Throughput                                                                      %                           9.17
+    Duration                                                                       usecond                         372.51
+    L1/TEX Cache Throughput                                                              %                          70.03
+    L2 Cache Throughput                                                                  %                          15.26
+    SM Active Cycles                                                                 cycle                      193418.73
+    Compute (SM) [%]                                                                     %                          81.76
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.87
+    Issued Ipc Active                                                           inst/cycle                           2.19
+    SM Busy                                                                              %                          91.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.25
+    Mem Busy                                                                             %                          35.01
+    Max Bandwidth                                                                        %                          38.78
+    L1/TEX Hit Rate                                                                      %                           0.82
+    L2 Hit Rate                                                                          %                          90.72
+    Mem Pipes Busy                                                                       %                          38.78
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.79
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.21
+    Active Warps Per Scheduler                                                        warp                           2.82
+    Eligible Warps Per Scheduler                                                      warp                           1.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.82 active warps per scheduler, but only an average of 1.28 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106098.62
+    Executed Instructions                                                             inst                       16975779
+    Avg. Issued Instructions Per Scheduler                                            inst                      106122.99
+    Issued Instructions                                                               inst                       16979678
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.23
+    Achieved Active Warps Per SM                                                      warp                          11.28
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.2%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61754
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:16, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         582.99
+    Elapsed Cycles                                                                   cycle                         217104
+    Memory [%]                                                                           %                          38.83
+    DRAM Throughput                                                                      %                           9.18
+    Duration                                                                       usecond                         372.38
+    L1/TEX Cache Throughput                                                              %                          70.12
+    L2 Cache Throughput                                                                  %                          15.29
+    SM Active Cycles                                                                 cycle                      193330.95
+    Compute (SM) [%]                                                                     %                          81.88
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.20
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.89
+    Issued Ipc Active                                                           inst/cycle                           2.20
+    SM Busy                                                                              %                          91.94
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.25
+    Mem Busy                                                                             %                          35.06
+    Max Bandwidth                                                                        %                          38.83
+    L1/TEX Hit Rate                                                                      %                           0.82
+    L2 Hit Rate                                                                          %                          90.64
+    Mem Pipes Busy                                                                       %                          38.83
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.81
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.19
+    Active Warps Per Scheduler                                                        warp                           2.82
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.82 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106097.91
+    Executed Instructions                                                             inst                       16975665
+    Avg. Issued Instructions Per Scheduler                                            inst                      106120.51
+    Issued Instructions                                                               inst                       16979281
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.27
+    Achieved Active Warps Per SM                                                      warp                          11.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.3%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61787
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  volta_sgemm_128x64_nn, 2024-May-15 04:05:18, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.98
+    SM Frequency                                                             cycle/usecond                         583.31
+    Elapsed Cycles                                                                   cycle                         217278
+    Memory [%]                                                                           %                          38.80
+    DRAM Throughput                                                                      %                           9.14
+    Duration                                                                       usecond                         372.48
+    L1/TEX Cache Throughput                                                              %                          70.06
+    L2 Cache Throughput                                                                  %                          15.27
+    SM Active Cycles                                                                 cycle                      193407.40
+    Compute (SM) [%]                                                                     %                          81.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 82%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           2.19
+    Executed Ipc Elapsed                                                        inst/cycle                           1.95
+    Issue Slots Busy                                                                     %                          54.87
+    Issued Ipc Active                                                           inst/cycle                           2.19
+    SM Busy                                                                              %                          91.91
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   FMA is the highest-utilized pipeline (91.9%). It executes 32-bit floating point (FADD, FMUL, FMAD, ...) and   
+          integer (IMUL, IMAD) operations. The pipeline is over-utilized and likely a performance bottleneck. See the   
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-decoder) or  
+          hover over the pipeline name to understand the workloads handled by each pipeline. The Instruction            
+          Statistics section shows the mix of executed instructions in this kernel. Check the Warp State Statistics     
+          section for which reasons cause warps to stall.                                                               
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                          29.13
+    Mem Busy                                                                             %                          35.03
+    Max Bandwidth                                                                        %                          38.80
+    L1/TEX Hit Rate                                                                      %                           0.80
+    L2 Hit Rate                                                                          %                          90.69
+    Mem Pipes Busy                                                                       %                          38.80
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 2.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          54.79
+    Issued Warp Per Scheduler                                                                                        0.55
+    No Eligible                                                                          %                          45.21
+    Active Warps Per Scheduler                                                        warp                           2.81
+    Eligible Warps Per Scheduler                                                      warp                           1.29
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 1.8 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          2.81 active warps per scheduler, but only an average of 1.29 warps were eligible per cycle. Eligible warps    
+          are the subset of active warps that are ready to issue their next instruction. Every cycle with no eligible   
+          warp results in no instruction being issued and the issue slot remains unused. To increase the number of      
+          eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons on the Warp  
+          State Statistics and Source Counters sections.                                                                
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 4.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           5.14
+    Warp Cycles Per Executed Instruction                                             cycle                           5.14
+    Avg. Active Threads Per Warp                                                                                    32.00
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.81
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                      106097.77
+    Executed Instructions                                                             inst                       16975644
+    Avg. Issued Instructions Per Scheduler                                            inst                      106123.67
+    Issued Instructions                                                               inst                       16979787
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        128
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                         144
+    Registers Per Thread                                                   register/thread                            122
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                             Kbyte/block                          12.54
+    Threads                                                                         thread                          18432
+    Waves Per SM                                                                                                     0.90
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                              5
+    Block Limit Warps                                                                block                              8
+    Theoretical Active Warps per SM                                                   warp                             16
+    Theoretical Occupancy                                                                %                             50
+    Achieved Occupancy                                                                   %                          35.23
+    Achieved Active Warps Per SM                                                      warp                          11.27
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (50.0%) is limited by the number of required registers The difference     
+          between calculated theoretical (50.0%) and measured achieved occupancy (35.2%) can be the result of warp      
+          scheduling overheads or workload imbalances during the kernel execution. Load imbalances can occur between    
+          warps within a block as well as across blocks of the same kernel. See the CUDA Best Practices Guide           
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.00
+    Branch Instructions                                                               inst                          61823
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 36864 excessive wavefronts (2% of the     
+          total 2230848 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
+  matMul(int, float *, float *, float *), 2024-May-15 04:05:21, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           4.97
+    SM Frequency                                                             cycle/usecond                         582.45
+    Elapsed Cycles                                                                   cycle                         313014
+    Memory [%]                                                                           %                          36.74
+    DRAM Throughput                                                                      %                           1.49
+    Duration                                                                       usecond                         537.41
+    L1/TEX Cache Throughput                                                              %                          73.48
+    L2 Cache Throughput                                                                  %                           4.25
+    SM Active Cycles                                                                 cycle                      285480.25
+    Compute (SM) [%]                                                                     %                          33.07
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel exhibits low compute throughput and memory bandwidth utilization relative to the peak performance 
+          of this device. Achieved compute throughput and/or memory bandwidth below 60.0% of peak typically indicate    
+          latency issues. Look at Scheduler Statistics and Warp State Statistics for potential reasons.                 
+
+    INF   The ratio of peak float (fp32) to double (fp64) performance on this device is 32:1. The kernel achieved 14%   
+          of this device's fp32 peak performance and 0% of its fp64 peak performance. See the Kernel Profiling Guide    
+          (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#roofline) for mode details on roofline      
+          analysis.                                                                                                     
+
+    Section: Compute Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Executed Ipc Active                                                         inst/cycle                           0.65
+    Executed Ipc Elapsed                                                        inst/cycle                           0.59
+    Issue Slots Busy                                                                     %                          16.15
+    Issued Ipc Active                                                           inst/cycle                           0.65
+    SM Busy                                                                              %                          18.05
+    ---------------------------------------------------------------------- --------------- ------------------------------
+          No compute pipeline is over-utilized.                                                                         
+
+    Section: Memory Workload Analysis
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Memory Throughput                                                         Gbyte/second                           4.73
+    Mem Busy                                                                             %                          36.74
+    Max Bandwidth                                                                        %                          33.07
+    L1/TEX Hit Rate                                                                      %                           1.52
+    L2 Hit Rate                                                                          %                          96.22
+    Mem Pipes Busy                                                                       %                          33.07
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    WRN   The memory access pattern for stores from L1TEX to L2 is not optimal. The granularity of an L1TEX request to  
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 1.8 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced stores and try to minimize how many cache lines need to be accessed per memory        
+          request.                                                                                                      
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The memory access pattern for loads from L1TEX to L2 is not optimal. The granularity of an L1TEX request to   
+          L2 is a 128 byte cache line. That is 4 consecutive 32-byte sectors per L2 request. However, this kernel only  
+          accesses an average of 1.1 sectors out of the possible 4 sectors per cache line. Check the Source Counters    
+          section for uncoalesced loads and try to minimize how many cache lines need to be accessed per memory         
+          request.                                                                                                      
+
+    Section: Scheduler Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    One or More Eligible                                                                 %                          32.24
+    Issued Warp Per Scheduler                                                                                        0.32
+    No Eligible                                                                          %                          67.76
+    Active Warps Per Scheduler                                                        warp                           0.99
+    Eligible Warps Per Scheduler                                                      warp                           0.32
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Every scheduler is capable of issuing one instruction per cycle, but for this kernel each scheduler only      
+          issues an instruction every 3.1 cycles. This might leave hardware resources underutilized and may lead to     
+          less optimal performance. Out of the maximum of 8 warps per scheduler, this kernel allocates an average of    
+          0.99 active warps per scheduler, which already limits the scheduler to less than a warp per instruction.      
+    ----- --------------------------------------------------------------------------------------------------------------
+    WRN   The 1.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. Use the Occupancy section to identify what limits this kernel's theoretical occupancy. 
+
+    Section: Warp State Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Warp Cycles Per Issued Instruction                                               cycle                           3.08
+    Warp Cycles Per Executed Instruction                                             cycle                           3.08
+    Avg. Active Threads Per Warp                                                                                       32
+    Avg. Not Predicated Off Threads Per Warp                                                                        31.94
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   On average, each warp of this kernel spends 1.2 cycles being stalled on a fixed latency execution dependency. 
+          This represents about 37.4% of the total average of 3.1 cycles between issuing two instructions. Typically,   
+          this stall reason should be very low and only shows up as a top contributor in already highly optimized       
+          kernels. Try to hide the corresponding instruction latencies by increasing the number of active warps,        
+          restructuring the code or unrolling loops. Furthermore, consider switching to lower-latency instructions,     
+          e.g. by making use of fast math compiler options.                                                             
+    ----- --------------------------------------------------------------------------------------------------------------
+    INF   Check the Source Counters section for the top stall locations in your source based on sampling data. The      
+          Kernel Profiling Guide (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#sampling) provides   
+          more details on each stall reason.                                                                            
+
+    Section: Instruction Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Avg. Executed Instructions Per Scheduler                                          inst                          46096
+    Executed Instructions                                                             inst                        7375360
+    Avg. Issued Instructions Per Scheduler                                            inst                          46101
+    Issued Instructions                                                               inst                        7376160
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                         64
+    Function Cache Configuration                                                                cudaFuncCachePreferShared
+    Grid Size                                                                                                         256
+    Registers Per Thread                                                   register/thread                             96
+    Shared Memory Configuration Size                                                 Kbyte                          65.54
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                            Kbyte/block                          65.54
+    Static Shared Memory Per Block                                              byte/block                              0
+    Threads                                                                         thread                          16384
+    Waves Per SM                                                                                                     6.40
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                             10
+    Block Limit Shared Mem                                                           block                              1
+    Block Limit Warps                                                                block                             16
+    Theoretical Active Warps per SM                                                   warp                              2
+    Theoretical Occupancy                                                                %                           6.25
+    Achieved Occupancy                                                                   %                           6.25
+    Achieved Active Warps Per SM                                                      warp                           2.00
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy (6.2%) is limited by the required amount of shared memory See the CUDA    
+          Best Practices Guide (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for      
+          more details on optimizing occupancy.                                                                         
+
+    Section: Source Counters
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Branch Instructions Ratio                                                            %                           0.02
+    Branch Instructions                                                               inst                         121344
+    Branch Efficiency                                                                    %                            100
+    Avg. Divergent Branches                                                                                             0
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel has uncoalesced shared accesses resulting in a total of 1474560 excessive wavefronts (37% of the  
+          total 3981312 wavefronts). Check the L1 Wavefronts Shared Excessive table for the primary source locations.   
+          The CUDA Best Practices Guide                                                                                 
+           (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#shared-memory-in-matrix-multiplication-c
+          -aa) has an example on optimizing shared memory accesses.                                                     
+
